@@ -19,7 +19,7 @@ class Database {
 
         val thread = Thread {
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver")
+                Class.forName("com.mysql.jdbc.Driver")
                 connection = DriverManager.getConnection(url, user, password)
             } catch (e: SQLException) {
                 println("inside catch")
