@@ -19,20 +19,10 @@ class LoginActivity : AppCompatActivity() {
         binding= ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.btnLogin.setOnClickListener {
-
-            var database = Database()
-            var username = findViewById<TextInputEditText>(R.id.et_email)
-            var password = findViewById<TextInputEditText>(R.id.et_password)
-            var userExist = database.authenticate(username.text.toString(), password.text.toString())
-            if (userExist == true) {
-                startActivity(Intent(this, HomeActivity::class.java))
-            }
-            else {
-                Toast.makeText(this, "Authentication error....", Toast.LENGTH_SHORT).show()
-            }
+            startActivity(Intent(this,HomeActivity::class.java))
         }
+
         binding.tvHaventAccount.setOnClickListener{
             startActivity(Intent(this,RegisterActivity::class.java))
         }

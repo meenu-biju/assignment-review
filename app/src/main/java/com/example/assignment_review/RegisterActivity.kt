@@ -1,9 +1,10 @@
 package com.example.assignment_review
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.assignment_review.databinding.ActivityRegisterBinding
+import com.google.android.material.textfield.TextInputEditText
 
 class RegisterActivity : AppCompatActivity() {
 
