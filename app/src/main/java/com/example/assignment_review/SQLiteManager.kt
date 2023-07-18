@@ -36,22 +36,28 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1
         val selectionArgs = arrayOf(regUsername, regPwd)
         val cursor = db.query("REGISTER", null, query, selectionArgs, null, null, null)
         val isLoggedIn = cursor.moveToFirst()
-        val userIdIndex = cursor.getColumnIndex("REGID")
-        val userId = cursor.getLong(userIdIndex)
-        cursor.close()
-        db.close()
-        val sessionDb = writableDatabase
+
         if (isLoggedIn) {
+            val userIdIndex = cursor.getColumnIndex("REGID")
+            val userId = cursor.getLong(userIdIndex)
+            cursor.close()
+            db.close()
+
+            val sessionDb = writableDatabase
             sessionDb.delete("SESSION", null, null)
             val values = ContentValues()
             values.put("USERNAME", regUsername)
             values.put("USERID", userId)
             sessionDb.insert("SESSION", null, values)
+            sessionDb.close()
+        } else {
+            cursor.close()
+            db.close()
         }
-        sessionDb.close()
 
         return isLoggedIn
     }
+
 
     fun insertReview(content: String): Long {
         val db = writableDatabase
