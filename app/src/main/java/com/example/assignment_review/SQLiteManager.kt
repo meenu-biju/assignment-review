@@ -11,6 +11,7 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1
         db?.execSQL("CREATE TABLE REGISTER(REGID INTEGER PRIMARY KEY AUTOINCREMENT, REGNAME TEXT, REGEMAIL VARCHAR, REGUSERNAME TEXT,  REGPWD TEXT, ADMIN INTEGER DEFAULT 0 )")
         db?.execSQL("CREATE TABLE REVIEW(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, CONTENT TEXT)")
         db?.execSQL("CREATE TABLE SESSION(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, USERID INTEGER)")
+        db?.execSQL("CREATE TABLE ACTIVITY(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERID INTEGER, REVIEWID INTEGER, USERACTION VARCHAR)")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -74,6 +75,27 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1
 
         return reviewId
     }
+
+    fun getUserNameFromSession(): String {
+        val db = readableDatabase
+        val query = "SELECT USERNAME FROM SESSION"
+        val cursor = db.rawQuery(query, null)
+        var username: String = ""
+
+        if (cursor.moveToFirst()) {
+            val usernameIndex = cursor.getColumnIndex("USERNAME")
+            username = if (usernameIndex != -1) cursor.getString(usernameIndex) else ""
+
+        }
+
+        cursor.close()
+        db.close()
+
+        return username
+    }
+
+
+
 
 
 }
