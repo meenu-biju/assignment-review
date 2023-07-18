@@ -72,5 +72,6 @@ class HomeActivity : AppCompatActivity(), ReviewAdapter.OnItemClickListener {
 
     override fun onItemClick(review: Int) {
         Toast.makeText(this, "Clicked review: $review", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, ReviewDetail::class.java))
     }
 }
