@@ -12,6 +12,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         SQLiteManager(applicationContext)
+        var helper = SQLiteManager(applicationContext)
+        var db = helper.readableDatabase
+        var rs = db.rawQuery("SELECT * FROM REGISTER",null)
 
 
         binding.btnLogin.setOnClickListener {
