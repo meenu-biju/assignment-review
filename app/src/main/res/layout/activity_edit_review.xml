@@ -33,20 +33,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_width="347dp"
-                android:layout_height="43dp"
-                android:text="@string/card_title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/submitReview"
+                style="@style/TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/card_content"
-                android:layout_width="343dp"
-                android:layout_height="148dp"
-                android:text="@string/card_sub_title"
-                android:textSize="14sp" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_submit"

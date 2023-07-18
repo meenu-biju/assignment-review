@@ -18,6 +18,10 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
+        binding.addUserReview.setOnClickListener {
+            startActivity(Intent(this, EditReviewActivity::class.java))
+        }
+
         binding.btnEdit.setOnClickListener {
              startActivity(Intent(this,EditReviewActivity::class.java))
 

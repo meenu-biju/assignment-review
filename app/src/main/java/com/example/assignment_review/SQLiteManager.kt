@@ -5,11 +5,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"USERDB",null,1){
+class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1){
     override fun onCreate(db: SQLiteDatabase?) {
         println("inside manager")
-        db?.execSQL("CREATE TABLE REGISTER(REGID INTEGER PRIMARY KEY AUTOINCREMENT, REGNAME TEXT, REGEMAIL VARCHAR, REGUSERNAME TEXT,  REGPWD TEXT)")
-        db?.execSQL("INSERT INTO REGISTER(REGNAME,REGEMAIL,REGUSERNAME,REGPWD) VALUES ('meenubiju','meenu@123','meenu','123')")
+        db?.execSQL("CREATE TABLE REGISTER(REGID INTEGER PRIMARY KEY AUTOINCREMENT, REGNAME TEXT, REGEMAIL VARCHAR, REGUSERNAME TEXT,  REGPWD TEXT, ADMIN INTEGER DEFAULT 0 )")
+        db?.execSQL("CREATE TABLE REVIEW(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, CONTENT TEXT)")
+        db?.execSQL("CREATE TABLE SESSION(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, USERID INTEGER)")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -34,8 +35,20 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"USERDB",null,1)
         val selectionArgs = arrayOf(regUsername, regPwd)
         val cursor = db.query("REGISTER", null, query, selectionArgs, null, null, null)
         val isLoggedIn = cursor.moveToFirst()
+        val userIdIndex = cursor.getColumnIndex("REGID")
+        val userId = cursor.getLong(userIdIndex)
         cursor.close()
         db.close()
+        val sessionDb = writableDatabase
+        if (isLoggedIn) {
+            sessionDb.delete("SESSION", null, null)
+            val values = ContentValues()
+            values.put("USERNAME", regUsername)
+            values.put("USERID", userId)
+            sessionDb.insert("SESSION", null, values)
+        }
+        sessionDb.close()
+
         return isLoggedIn
     }
 }
