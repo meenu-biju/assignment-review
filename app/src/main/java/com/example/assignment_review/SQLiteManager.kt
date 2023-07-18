@@ -51,4 +51,29 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1
 
         return isLoggedIn
     }
+
+    fun insertReview(content: String): Long {
+        val db = writableDatabase
+
+        // Fetch the userid from the SESSION table
+        val sessionQuery = "SELECT USERNAME FROM SESSION"
+        val sessionCursor = db.rawQuery(sessionQuery, null)
+        val userIdIndex = sessionCursor.getColumnIndex("USERNAME")
+        val username: String? = if (sessionCursor.moveToFirst()) {
+            sessionCursor.getString(userIdIndex)
+        } else {
+            null // Default value if no entry is found in the SESSION table
+        }
+        sessionCursor.close()
+
+        val reviewValues = ContentValues()
+        reviewValues.put("USERNAME", username)
+        reviewValues.put("CONTENT", content)
+        val reviewId = db.insert("REVIEW", null, reviewValues)
+        db.close()
+
+        return reviewId
+    }
+
+
 }
