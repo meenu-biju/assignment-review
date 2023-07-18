@@ -93,9 +93,87 @@ class SQLiteManager(context:Context) : SQLiteOpenHelper(context,"REVIEWS",null,1
 
         return username
     }
+    fun getUserIDFromSession(): Int {
+        val db = readableDatabase
+        val query = "SELECT USERID FROM SESSION"
+        val cursor = db.rawQuery(query, null)
+        var UserID: Int = 0
+
+        if (cursor.moveToFirst()) {
+            val USERIDIndex = cursor.getColumnIndex("USERID")
+            UserID = if (USERIDIndex != -1) cursor.getInt(USERIDIndex) else 0
+
+        }
+
+        cursor.close()
+        db.close()
+
+        return UserID
+    }
+
+    fun toggleReviewAction(userId: Int, reviewId: Int, userAction: String) {
+        val db = writableDatabase
+
+        // Delete the opposite action row if it exists
+        val oppositeAction = if (userAction == "like") "dislike" else "like"
+        db.delete("ACTIVITY", "USERID = ? AND REVIEWID = ?", arrayOf(userId.toString(), reviewId.toString()))
+
+        // Insert the new action row
+        val values = ContentValues().apply {
+            put("USERID", userId)
+            put("REVIEWID", reviewId)
+            put("USERACTION", userAction)
+        }
+
+        db.insert("ACTIVITY", null, values)
+//        db.close()
+    }
+
+    fun isReviewDisliked(userId: Int, reviewId: Int): Boolean {
+        val db = readableDatabase
+
+        val selection = "USERID = ? AND REVIEWID = ? AND USERACTION = ?"
+        val selectionArgs = arrayOf(userId.toString(), reviewId.toString(), "dislike")
+
+        val cursor = db.query("ACTIVITY", null, selection, selectionArgs, null, null, null)
+        val isDisliked = cursor.count > 0
+
+        cursor.close()
+        db.close()
+
+        return isDisliked
+    }
+
+    fun isReviewLiked(userId: Int, reviewId: Int): Boolean {
+        val db = readableDatabase
+
+        val selection = "USERID = ? AND REVIEWID = ? AND USERACTION = ?"
+        val selectionArgs = arrayOf(userId.toString(), reviewId.toString(), "like")
+
+        val cursor = db.query("ACTIVITY", null, selection, selectionArgs, null, null, null)
+        val liked = cursor.count > 0
+
+        cursor.close()
+        db.close()
+
+        return liked
+    }
 
 
+    fun updateReview(reviewId: Int, content: String): Boolean {
+        val db = writableDatabase
 
+        // Prepare the values to be updated
+        val reviewValues = ContentValues().apply {
+            put("CONTENT", content)
+        }
+
+        // Update the review with the specified reviewId
+        val rowsAffected = db.update("REVIEW", reviewValues, "ID = ?", arrayOf(reviewId.toString()))
+        db.close()
+
+        return rowsAffected > 0
+    }
 
 
 }
