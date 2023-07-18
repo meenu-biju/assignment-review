@@ -20,7 +20,20 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLogin.setOnClickListener {
-            startActivity(Intent(this,HomeActivity::class.java))
+            var et_email = findViewById<TextInputEditText>(R.id.et_email)
+            var et_password = findViewById<TextInputEditText>(R.id.et_password)
+            if(et_email.text!!.isBlank() || et_password.text!!.isBlank()){
+                Toast.makeText(applicationContext,"Email and password should be valid.",Toast.LENGTH_LONG).show()
+            }
+            else {
+                val sqliteManager = SQLiteManager(applicationContext)
+                val isLoggedIn = sqliteManager.loginAuthentication(et_email.text.toString(), et_password.text.toString())
+                if (isLoggedIn) {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                } else {
+                    Toast.makeText(applicationContext, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         binding.tvHaventAccount.setOnClickListener{
