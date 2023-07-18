@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class ReviewAdapter(private val reviewsList: List<String>, private val listener: OnItemClickListener) :
+class ReviewAdapter(private val reviewsList: List<String>, private val reviewsIds: List<Int>, private val listener: OnItemClickListener) :
     RecyclerView.Adapter<ReviewViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(review: String)
+        fun onItemClick(review: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -19,9 +19,10 @@ class ReviewAdapter(private val reviewsList: List<String>, private val listener:
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviewsList[position]
         holder.reviewTextView.text = review
+        val reviewId = reviewsIds[position]
 
         holder.itemView.setOnClickListener {
-            listener.onItemClick(review)
+            listener.onItemClick(reviewId)
         }
     }
 

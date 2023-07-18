@@ -45,16 +45,20 @@ class HomeActivity : AppCompatActivity(), ReviewAdapter.OnItemClickListener {
 
         // Create an ArrayList to store the reviews
         val reviewsList = ArrayList<String>()
+        val reviewsIds = ArrayList<Int>()
 
         // Iterate through the cursor and retrieve the reviews
         if (cursor.moveToFirst()) {
             do {
                 val usernameIndex = cursor.getColumnIndex("USERNAME")
                 val contentIndex = cursor.getColumnIndex("CONTENT")
+                val reviewIdIndex = cursor.getColumnIndex("ID")
                 val username = if (usernameIndex != -1) cursor.getString(usernameIndex) else ""
                 val content = if (contentIndex != -1) cursor.getString(contentIndex) else ""
+                val contentId = if (reviewIdIndex != -1) cursor.getInt(reviewIdIndex) else 0
                 val review = "$username: $content"
                 reviewsList.add(review)
+                reviewsIds.add(contentId)
             } while (cursor.moveToNext())
         }
 
@@ -62,11 +66,11 @@ class HomeActivity : AppCompatActivity(), ReviewAdapter.OnItemClickListener {
         db.close()
 
         // Create the ReviewAdapter with the reviewsList and set it on the RecyclerView
-        reviewAdapter = ReviewAdapter(reviewsList, this)
+        reviewAdapter = ReviewAdapter(reviewsList, reviewsIds, this)
         recyclerView.adapter = reviewAdapter
     }
 
-    override fun onItemClick(review: String) {
+    override fun onItemClick(review: Int) {
         Toast.makeText(this, "Clicked review: $review", Toast.LENGTH_SHORT).show()
     }
 }
